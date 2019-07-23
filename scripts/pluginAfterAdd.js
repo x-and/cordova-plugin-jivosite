@@ -12,7 +12,7 @@ module.exports = function(ctx) {
     	fs.mkdirSync(jivosite, { recursive: true });
     } catch (e) {}
 
-    ['bundle.js', 'index_ru.html', 'index_en.html'].forEach( el => {
+    ['bundle.js', 'index_ru.html', 'index_en.html', 'jivo.css'].forEach( el => {
 		fs.copyFileSync(path.join(plugin, el), path.join(jivosite, el));
     })
 
