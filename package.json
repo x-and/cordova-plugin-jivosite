@@ -5,14 +5,12 @@
   "cordova": {
     "id": "cordova-jivosite-plugin",
     "platforms": [
-      "android",
-      "ios"
+      "android"
     ]
   },
   "keywords": [
     "ecosystem:cordova",
-    "cordova-android",
-    "cordova-ios"
+    "cordova-android"
   ],
   "author": "",
   "license": "ISC"
