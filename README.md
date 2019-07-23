@@ -22,8 +22,8 @@ wrap around https://github.com/JivoSite/MobileSdk for use as cordova plugin
 	*/
 	"plane_color":"#ffaa22",
 	"active_message": "Здравствуйте! Я могу вам чем-то помочь?",
-	"widget_id": "jWQigXS11b", //widget_id
-	"site_id": 431188, //site_id
+	"widget_id": "123123123", //widget_id
+	"site_id": 000000, //site_id
 	"app_link": "",//ссылка, которая будет светиться у оператора
 	"placeholder": "Введите сообщение",
 	"secure": true
