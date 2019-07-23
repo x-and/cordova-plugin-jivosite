@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="cordova-plugin-jivosite" version="0.0.1" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+	<name>JivoSite</name>
+
+	<js-module name="JivoSite" src="www/JivoSite.js">
+		<clobbers target="cordova.plugins.JivoSite" />
+	</js-module>
+
+	<hook type="after_plugin_add" src="scripts/pluginAfterAdd.js" />
+	<hook type="before_build" src="scripts/pluginBeforeBuild.js" />
+
+	<platform name="android">
+		<config-file parent="/*" target="res/xml/config.xml">
+			<feature name="JivoSite">
+				<param name="android-package" value="com.sevstar.jivosite.JivoSite" />
+			</feature>
+		</config-file>
+		<config-file parent="/*" target="AndroidManifest.xml" />
+		<source-file src="src/android/JivoSite.java" target-dir="src/com/sevstar/jivosite" />
+		<source-file src="src/android/sdk/JivoActivity.java" target-dir="src/com/sevstar/jivosite/sdk" />
+		<source-file src="src/android/sdk/JivoDelegate.java" target-dir="src/com/sevstar/jivosite/sdk" />
+		<source-file src="src/android/sdk/JivoSdk.java" target-dir="src/com/sevstar/jivosite/sdk" />
+		<source-file src="src/android/sdk/ResourceHelper.java" target-dir="src/com/sevstar/jivosite/sdk" />
+
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <activity android:label="JivoSite Activity" android:name="com.sevstar.jivosite.sdk.JivoActivity"></activity>
+        </config-file>
+        <source-file src="src/android/activity_jivo_web_view.xml" target-dir="res/layout"/>
+	</platform>
+
+	<platform name="ios">
+		<config-file parent="/*" target="config.xml">
+			<feature name="JivoSite">
+				<param name="ios-package" value="JivoSite" />
+			</feature>
+		</config-file>
+		<source-file src="src/ios/JivoSite.m" />
+	</platform>
+
+</plugin>

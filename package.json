@@ -1,0 +1,19 @@
+{
+  "name": "cordova-jivosite-plugin",
+  "version": "0.0.1",
+  "description": "jivosite-mobile-sdk cordova integration",
+  "cordova": {
+    "id": "cordova-jivosite-plugin",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "author": "",
+  "license": "ISC"
+}
