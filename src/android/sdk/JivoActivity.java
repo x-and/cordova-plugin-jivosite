@@ -62,8 +62,8 @@ import java.util.Locale;
                 startActivity(browserIntent);
             }
         }
-        if (name.equals('chat.ready') && this.getUserToken().getLength()) {
-            jivoSdk.callApiMethod("setUserToken",this.getUserToken());
+        if (name.equals("chat.ready") && this.userToken.length() > 0) {
+            jivoSdk.callApiMethod("setUserToken",this.userToken);
         }
     }
 }
