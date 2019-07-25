@@ -35,10 +35,21 @@ wrap around https://github.com/JivoSite/MobileSdk for use as cordova plugin
 ## js api
 
 ### open_chat(userToken = null)
-This will start activity with jivochat. parameter userToken is provided to use jivosite `setUserToken`
+This will start activity with jivochat.
+
+
+#### opts is object:
+```json
+{
+  "userToken": "",// is provided to use jivosite `setUserToken`
+  "activityTitle": "",//string for activity label
+  "backButton": false,//should actionBar has backbtn for exit
+  "hideActivityTitle": false//hide actionBar
+}
+```
 
 ```js
-cordova.plugins.JivoSite.openChat(0099887766); // some userToken
+cordova.plugins.JivoSite.openChat(opts); // some userToken
 ```
 
 

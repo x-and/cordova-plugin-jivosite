@@ -1,11 +1,13 @@
 package com.sevstar.jivosite.sdk;
 
 import android.app.Activity;
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -30,13 +32,22 @@ import java.util.Locale;
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            requestWindowFeature(Window.FEATURE_NO_TITLE); //will hide the title
 
             Bundle b = this.getIntent().getExtras();
+            ActionBar a =  this.getActionBar();
 
             if (b != null) {
                 if (b.containsKey("userToken")) {
                     this.userToken = b.getString("userToken");
+                }
+                if (b.containsKey("activityTitle")) {
+                    a.setTitle(b.getString("activityTitle"));
+                }
+                if (b.containsKey("backButton") && b.getBoolean("backButton")) {
+                    a.setDisplayHomeAsUpEnabled(true);
+                }
+                if (b.containsKey("hideActivityTitle") && b.getBoolean("hideActivityTitle")) {
+                    requestWindowFeature(Window.FEATURE_NO_TITLE); //will hide the title
                 }
             }
 
@@ -65,5 +76,16 @@ import java.util.Locale;
         if (name.equals("chat.ready") && this.userToken.length() > 0) {
             jivoSdk.callApiMethod("setUserToken",this.userToken);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

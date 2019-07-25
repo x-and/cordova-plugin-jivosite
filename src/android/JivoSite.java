@@ -14,9 +14,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * This class echoes a string called from JavaScript.
- */
 public class JivoSite extends CordovaPlugin {
 
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
@@ -27,19 +24,34 @@ public class JivoSite extends CordovaPlugin {
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         if (action.equals("open_chat")) {
-            String userToken = args.getString(0);
-            this.openNewActivity(userToken);
+            this.openNewActivity(args.getJSONObject(0));
             return true;
-        } else if (action.equals("set_user_token")) {
-            String userToken = args.getString(0);
         }
         return false;
     }
 
-    private void openNewActivity(String userToken) {
+    private void openNewActivity(JSONObject opts) {
         Intent intent = new Intent(this.webView.getContext(), JivoActivity.class);
         Bundle b = new Bundle();
-        b.putString("userToken", userToken);
+        try {
+            if (opts != null) {
+                if (opts.getString("userToken") != null) {
+                    b.putString("userToken", opts.getString("userToken"));
+                }
+                if (opts.getString("activityTitle") != null) {
+                    b.putString("activityTitle", opts.getString("activityTitle"));
+                }
+                if (opts.getBoolean("backButton")) {
+                    b.putBoolean("backButton", opts.getBoolean("backButton"));
+                }
+                if (opts.getBoolean("hideActivityTitle")) {
+                    b.putBoolean("hideActivityTitle", opts.getBoolean("hideActivityTitle"));
+                }
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         intent.putExtras(b);
         this.cordova.getActivity().startActivity(intent);
     }
