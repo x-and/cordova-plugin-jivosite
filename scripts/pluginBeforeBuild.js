@@ -10,6 +10,11 @@ module.exports = function(ctx) {
     const pathToJivosite = path.join(path.join(ctx.opts.projectRoot, 'platforms/android/app/src/main/assets/jivosite'), filenameTo);
     const pathToFile = path.join(ctx.opts.projectRoot, filenameFrom);
 
+    try {
+        fs.mkdirSync(pathToJivosite, { recursive: true });
+    } catch (e) {}
+
+
     if (!fs.existsSync(pathToFile)) {
     	throw new Exception('no jivosite-conf.json found in root')
     }
@@ -25,6 +30,12 @@ module.exports = function(ctx) {
 	fs.close(fd, (err) => {
 		if (err) throw err;
 	});
+
+    const plugin = path.join(ctx.opts.plugin.dir, 'www');
+
+    ['bundle.js', 'index_ru.html', 'index_en.html', 'jivo.css'].forEach( el => {
+        fs.copyFileSync(path.join(plugin, el), path.join(pathToJivosite, el));
+    })
 
     return true;
 };
