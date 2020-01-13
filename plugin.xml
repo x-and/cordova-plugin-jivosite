@@ -35,6 +35,8 @@
 			</feature>
 		</config-file>
 		<source-file src="src/ios/JivoSite.m" />
+		<source-file src="src/ios/JivoSdk.m" />
+		<source-file src="src/ios/JivoSdk.h" />
 	</platform>
 
 </plugin>
