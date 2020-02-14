@@ -7,7 +7,7 @@ module.exports = function(ctx) {
     const filenameFrom = 'jivosite-conf.json';
     const filenameTo = 'jivosite-conf.js';
 
-    const pathToJivosite = path.join(ctx.opts.projectRoot, 'platforms/android/app/src/main/assets/jivosite');
+    const pathToJivosite = path.join(ctx.opts.projectRoot, 'dist/jivosite');
     const pathJivositeFile = path.join(pathToJivosite, filenameTo);
     const pathToFile = path.join(ctx.opts.projectRoot, filenameFrom);
 

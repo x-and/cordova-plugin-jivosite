@@ -1,5 +1,5 @@
 var exec = require('cordova/exec');
 
 exports.openChat = function (opts, success, error) {
-    exec(success, error, 'JivoSite', 'open_chat', [opts || {}]);
+    exec(success, error, 'JivoSite', 'open_chat', [opts.userToken, opts.backButton, opts.activityTitle]);
 };

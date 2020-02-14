@@ -75,9 +75,9 @@ public class JivoSdk {
         webView.setWebViewClient(new MyWebViewClient());
 
         if (this.language.length() > 0){
-            webView.loadUrl("file:///android_asset/jivosite/index_"+this.language+".html");
-        }else{
-            webView.loadUrl("file:///android_asset/jivosite/index_en.html");
+            webView.loadUrl("file:///android_asset/www/jivosite/index_"+this.language+".html");
+        } else {
+            webView.loadUrl("file:///android_asset/www/jivosite/index_en.html");
         }
 
     }

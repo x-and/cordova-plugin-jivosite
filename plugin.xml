@@ -35,8 +35,8 @@
 			</feature>
 		</config-file>
 		<source-file src="src/ios/JivoSite.m" />
-		<source-file src="src/ios/JivoSdk.m" />
-		<source-file src="src/ios/JivoSdk.h" />
+		<source-file src="src/ios/SRWebViewController.h" />
+		<source-file src="src/ios/SRWebViewController.m" />
 	</platform>
 
 </plugin>
