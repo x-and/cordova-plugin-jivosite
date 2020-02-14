@@ -24,34 +24,26 @@ public class JivoSite extends CordovaPlugin {
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         if (action.equals("open_chat")) {
-            this.openNewActivity(args.getJSONObject(0));
+            this.openNewActivity(args.getString(0), args.getBoolean(1), args.getString(2));
             return true;
         }
         return false;
     }
 
-    private void openNewActivity(JSONObject opts) {
+    private void openNewActivity(String userToken, boolean backButton, String activityTitle) {
         Intent intent = new Intent(this.webView.getContext(), JivoActivity.class);
         Bundle b = new Bundle();
-        try {
-            if (opts != null) {
-                if (opts.getString("userToken") != null) {
-                    b.putString("userToken", opts.getString("userToken"));
-                }
-                if (opts.getString("activityTitle") != null) {
-                    b.putString("activityTitle", opts.getString("activityTitle"));
-                }
-                if (opts.getBoolean("backButton")) {
-                    b.putBoolean("backButton", opts.getBoolean("backButton"));
-                }
-                if (opts.getBoolean("hideActivityTitle")) {
-                    b.putBoolean("hideActivityTitle", opts.getBoolean("hideActivityTitle"));
-                }
-            }
 
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (userToken != null) {
+            b.putString("userToken", userToken);
         }
+        if (activityTitle != null) {
+            b.putString("activityTitle", activityTitle);
+        }
+        if (backButton) {
+            b.putBoolean("backButton", backButton);
+        }
+
         intent.putExtras(b);
         this.cordova.getActivity().startActivity(intent);
     }
