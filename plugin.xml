@@ -7,6 +7,7 @@
 	</js-module>
 
 	<hook type="after_plugin_add" src="scripts/pluginAfterAdd.js" />
+	<hook type="after_platform_add" src="scripts/pluginAfterAdd.js" />
 	<hook type="before_build" src="scripts/pluginBeforeBuild.js" />
 
 	<platform name="android">
