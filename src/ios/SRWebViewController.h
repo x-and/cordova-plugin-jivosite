@@ -12,6 +12,14 @@
 @property (copy) NSString *navigationTitle;
 @property NSInteger userId;
 
+@end
+
+
+@interface SRWebNavigationController : UINavigationController
+
+@property (readonly) SRWebViewController *webViewController;
+
 - (void)showWebViewController;
 
 @end
+

@@ -4,7 +4,7 @@ const path = require('path');
 
 module.exports = function(ctx) {
 
-    const jivosite = path.join(ctx.opts.projectRoot, 'dist/jivosite');
+    const jivosite = path.join(ctx.opts.projectRoot, 'www/jivosite');
 
     const plugin = path.join(ctx.opts.plugin.dir, 'www');
 

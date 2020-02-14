@@ -7,6 +7,7 @@
 
 #import "SRWebViewController.h"
 
+
 @implementation SRWebViewController {
     UIWebView *_webView;
 }
@@ -16,19 +17,10 @@
     _webView.delegate = self;
 }
 
-- (void)showWebViewController {
-    UIViewController *rootViewController = UIApplication.sharedApplication.keyWindow.rootViewController;
-    rootViewController.modalPresentationStyle = UIModalPresentationPageSheet;
-    [rootViewController presentViewController:({
-        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self];
-        navigationController;
-    }) animated:YES completion:nil];
-}
-
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [_webView loadRequest:[NSURLRequest requestWithURL:({
-        [NSBundle.mainBundle URLForResource:@"index_ru" withExtension:@"html" subdirectory:@"www/assets/jivochat"];
+        [NSBundle.mainBundle URLForResource:@"index_ru" withExtension:@"html" subdirectory:@"www/jivosite"];
     })]];
 }
 
@@ -48,6 +40,39 @@
     NSLog(@"%s", __PRETTY_FUNCTION__ );
     NSString *script = [NSString stringWithFormat:@"window.jivo_api.setUserToken(%ld)", (long)self.userId];
     [webView stringByEvaluatingJavaScriptFromString:script];
+}
+
+@end
+
+
+@implementation SRWebNavigationController
+
+@synthesize webViewController = _webViewController;
+
+- (instancetype)init
+{
+    self = [super init];
+    if ( !self ) {
+        return self;
+    }
+    _webViewController = [SRWebViewController new];
+    return self;
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    if ( @available(iOS 13.0, *) ) {
+        return UIStatusBarStyleDarkContent;
+    }
+    return UIStatusBarStyleDefault;
+}
+
+- (void)showWebViewController {
+    UIViewController *rootViewController = UIApplication.sharedApplication.keyWindow.rootViewController;
+    rootViewController.modalPresentationStyle = UIModalPresentationPageSheet;
+    [rootViewController presentViewController:({
+        SRWebNavigationController *navigationController = [[SRWebNavigationController alloc] initWithRootViewController:_webViewController];
+        navigationController;
+    }) animated:YES completion:nil];
 }
 
 @end
