@@ -25,7 +25,7 @@
 		<source-file src="src/android/sdk/ResourceHelper.java" target-dir="src/com/sevstar/jivosite/sdk" />
 
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
-            <activity android:label="JivoSite Activity" android:name="com.sevstar.jivosite.sdk.JivoActivity"></activity>
+            <activity android:label="JivoSite Activity" android:name="com.sevstar.jivosite.sdk.JivoActivity" android:launchMode="singleTask"></activity>
         </config-file>
         <source-file src="src/android/activity_jivo_web_view.xml" target-dir="res/layout"/>
 	</platform>
