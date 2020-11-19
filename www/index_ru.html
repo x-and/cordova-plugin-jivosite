@@ -1,17 +1,63 @@
 <html>
-    <head>
-        <title>Widget Mobile RU</title>
-        <meta charset="utf-8">
-        <meta http-equiv="Content-Security-Policy" content="default-src *; script-src 'self' 'unsafe-inline' *; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: *;">
-        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-        <link rel="stylesheet" href="jivo.css" >
-        <script src="jivosite-conf.js"></script>
-        <script src="bundle.js"></script>
-        <script>
+	<head>
+		<title>Widget Mobile RU</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+		<link rel="stylesheet" href="jivo.css" >
+		<script src="jivosite-conf.js"></script>
+		<script>
+			my_jivo_config = jivo_config;
+			var script = document.createElement('script');
+			script.type = 'text/javascript';
+			script.src = 'https://code.jivosite.com/script/widget/%s.js'.replace('%s', my_jivo_config.widget_id);
+			document.getElementsByTagName('head')[0].appendChild(script);
 
-        </script>
-    </head>
-    <body>
-        <div id="chat"></div>
-    </body>
+			window.unique_id = '';
+
+			var removeTrash = () => document.querySelectorAll('jdiv').forEach( el => {
+				if (el.innerHTML.startsWith('Представьтесь в чате')) {
+					el.remove();
+				}
+
+				setTimeout(removeTrash, 500);
+			});
+
+			var jivo_onLoadCallback = function() {
+				console.log('jivo_onLoadCallback');
+				jivo_api.showProactiveInvitation(my_jivo_config.active_message, my_jivo_config.department_id);
+				jivo_api.open();
+
+				jivo_api.setContactInfo({
+					description: "Мобильное приложение"
+				});
+
+				removeTrash();
+
+				JivoInterface.send('chat.ready', '');
+			};
+
+			var jivo_onMessageSent = function() {
+				removeTrash();
+			};
+
+			document.onclick = function(event) {
+				var el = event.target;
+				if (el.tagName == 'A' && el.href) {
+					event.preventDefault();
+					JivoInterface.send('url.click', "'" + el.href + "'");
+				}
+			}
+
+			function setUserToken(str) {
+				console.log('setUserToken!', str);
+				unique_id = str;
+				if (window['jivo_api']) {
+					jivo_api.setUserToken(str);
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<div id="chat"></div>
+	</body>
 </html>

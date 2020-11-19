@@ -74,7 +74,7 @@ import java.util.Locale;
             }
         }
         if (name.equals("chat.ready") && this.userToken.length() > 0) {
-            jivoSdk.callApiMethod("setUserToken",this.userToken);
+            jivoSdk.execJS("setUserToken('" + this.userToken + "');");
         }
     }
 

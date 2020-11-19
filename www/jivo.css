@@ -5,3 +5,13 @@ html, body {
     width: 100%;
     background: white;
 }
+
+jdiv[class^="headerBox"],
+jdiv[class^="box_"],
+jdiv[class^="popup_"] {
+  display:none !important;
+}
+
+jdiv[class^=mobile_] [class^=body] {
+	top: 0px !important;
+}

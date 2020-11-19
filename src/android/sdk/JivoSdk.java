@@ -195,11 +195,15 @@ public class JivoSdk {
     }
 
     public void execJS(String script){
-        webView.loadUrl("javascript:" + script);
+        webView.post(new Runnable() {
+            public void run() {
+                webView.loadUrl("javascript:" + script);
+            }
+        });
     }
 
     public void callApiMethod(String methodName, String data){
-        webView.loadUrl("javascript:window.jivo_api." + methodName + "("+ data +");");
+        execJS("window.jivo_api." + methodName + "("+ data +");");
     }
 
 }
