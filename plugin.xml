@@ -31,7 +31,7 @@
 				android:launchMode="singleTask"
 				android:screenOrientation="portrait"
 				android:configChanges="orientation">
-				></activity>
+			</activity>
 		</config-file>
 		<source-file src="src/android/activity_jivo_web_view.xml" target-dir="res/layout"/>
 	</platform>
