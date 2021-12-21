@@ -1,12 +1,16 @@
 package com.sevstar.jivosite.sdk;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.os.Build;
 import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.View;
 import android.view.ViewTreeObserver;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -23,7 +27,6 @@ public class JivoSdk {
     public JivoSdk(WebView webView){
         this.webView = webView;
         this.language = "";
-
     }
 
     public JivoSdk(WebView webView, String language){
@@ -31,34 +34,9 @@ public class JivoSdk {
         this.language = language;
     }
 
-    public void prepare(){
-        DisplayMetrics dm = new DisplayMetrics();
-        ((Activity)delegate).getWindowManager().getDefaultDisplay().getMetrics(dm);
-        final float density = dm.density;
-
-        ViewTreeObserver.OnGlobalLayoutListener list = new ViewTreeObserver.OnGlobalLayoutListener() {
-            int previousHeightDiff = 0;
-            @Override
-            public void onGlobalLayout() {
-                Rect r = new Rect();
-                //r will be populated with the coordinates of your view that area still visible.
-                webView.getWindowVisibleDisplayFrame(r);
-
-                int heightDiff = webView.getRootView().getHeight() - r.bottom;
-                int pixelHeightDiff = (int)(heightDiff / density);
-                if (pixelHeightDiff > 100 && pixelHeightDiff != previousHeightDiff) { // if more than 100 pixels, its probably a keyboard...
-                    //String msg = "S" + Integer.toString(pixelHeightDiff);
-                    execJS("window.onKeyBoard({visible:false, height:0})");
-                }
-                else if ( pixelHeightDiff != previousHeightDiff && ( previousHeightDiff - pixelHeightDiff ) > 100 ){
-                    //String msg = "H";
-                    execJS("window.onKeyBoard({visible:false, height:0})");
-                }
-                previousHeightDiff = pixelHeightDiff;
-            }
-        };
-
-        webView.getViewTreeObserver().addOnGlobalLayoutListener(list);
+    @SuppressLint("SetJavaScriptEnabled")
+	public void prepare(){
+        JivoActivity act = ((JivoActivity) delegate);
 
         //создаем спиннер
         progr = new ProgressDialog(webView.getContext());
@@ -69,18 +47,33 @@ public class JivoSdk {
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);
         webSettings.setDatabaseEnabled(true);
-
+		webSettings.setAllowContentAccess(true);
+		webSettings.setAllowFileAccess(true);
+		webSettings.setAllowFileAccessFromFileURLs(true);
+		webSettings.setAllowUniversalAccessFromFileURLs(true);
         //пробрасываем JivoInterface в Javascript
+		if(Build.VERSION.SDK_INT >= 21){
+			webSettings.setMixedContentMode(0);
+			webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+		}else {
+			webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+		}
+
         webView.addJavascriptInterface(new JivoInterface(webView), "JivoInterface");
         webView.setWebViewClient(new MyWebViewClient());
 
-        if (this.language.length() > 0){
-            webView.loadUrl("file:///android_asset/www/jivosite/index_"+this.language+".html");
-        } else {
-            webView.loadUrl("file:///android_asset/www/jivosite/index_en.html");
-        }
+		loadPage();
 
-    }
+		webView.setWebChromeClient(act.new MyWebChromeClient());
+	}
+
+	public void loadPage() {
+		if (this.language.length() > 0){
+			webView.loadUrl("file:///android_asset/www/jivosite/index_"+this.language+".html");
+		} else {
+			webView.loadUrl("file:///android_asset/www/jivosite/index_en.html");
+		}
+	}
 
     public class JivoInterface{
 
@@ -156,7 +149,6 @@ public class JivoSdk {
     private class MyWebViewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-
             if (url.toLowerCase().indexOf("jivoapi://") == 0){
                 String[] components = url.replace("jivoapi://", "").split("/");
 
@@ -180,14 +172,12 @@ public class JivoSdk {
         }
 
         @Override
-        public void onPageStarted(WebView view, String url, Bitmap favicon)
-        {
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
-        }
+		}
 
         @Override
-        public void onPageFinished(WebView view, String url)
-        {
+        public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
             progr.dismiss();
         }

@@ -6,20 +6,23 @@
 //
 
 @import UIKit;
+#import <WebKit/WebKit.h>
+@interface SRWebViewController : UIViewController<WKNavigationDelegate>
 
-@interface SRWebViewController : UIViewController<UIWebViewDelegate>
-
-@property (copy) NSString *navigationTitle;
+@property (nonatomic, copy) NSString *navigationTitle;
 @property NSInteger userId;
+@property NSString *payload;
 
 @end
 
 
-@interface SRWebNavigationController : UINavigationController
+@interface SRWebNavigationController<__covariant VisibleController> : UINavigationController
 
-@property (readonly) SRWebViewController *webViewController;
+@property (readonly) VisibleController visibleViewController;
 
 - (void)showWebViewController;
+
++ (SRWebNavigationController<SRWebViewController *> *)defaultNavigationController;
 
 @end
 

@@ -28,9 +28,7 @@
 			<activity
 				android:label="JivoSite Activity"
 				android:name="com.sevstar.jivosite.sdk.JivoActivity"
-				android:launchMode="singleTask"
-				android:screenOrientation="portrait"
-				android:configChanges="orientation">
+				android:launchMode="singleTask">
 			</activity>
 		</config-file>
 		<source-file src="src/android/activity_jivo_web_view.xml" target-dir="res/layout"/>

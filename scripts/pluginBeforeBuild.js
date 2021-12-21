@@ -34,7 +34,7 @@ module.exports = function(ctx) {
 
     const plugin = path.join(ctx.opts.plugin.dir, 'www');
 
-    ['index_ru.html', 'index_en.html', 'jivo.css'].forEach( el => {
+    ['index_ru.html', 'index_en.html', 'jivo.css', 'jivo.js'].forEach( el => {
         fs.copyFileSync(path.join(plugin, el), path.join(pathToJivosite, el));
     })
 

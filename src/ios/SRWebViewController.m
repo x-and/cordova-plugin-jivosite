@@ -9,12 +9,17 @@
 
 
 @implementation SRWebViewController {
-    UIWebView *_webView;
+    WKWebView *_webView;
 }
 
 - (void)loadView {
-    self.view = _webView = [UIWebView new];
-    _webView.delegate = self;
+    self.view = _webView = [WKWebView new];
+    _webView.navigationDelegate = self;
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:self action:@selector(closeViewController)];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -24,22 +29,29 @@
     })]];
 }
 
-- (UINavigationItem *)navigationItem {
-    UINavigationItem *result = [[UINavigationItem alloc] initWithTitle:self.navigationTitle];
-    result.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:self action:@selector(closeViewController)];
-    return result;
+- (void)viewDidDisappear:(BOOL)animated {
+    self.view = NULL;
+}
+
+- (void)setNavigationTitle:(NSString *)navigationTitle {
+    _navigationTitle = [NSString stringWithFormat:@"%@", navigationTitle];
+    self.navigationItem.title = self.title = navigationTitle;
 }
 
 - (void)closeViewController {
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
-#pragma mark - UIWebViewDelegate
+#pragma mark - WKNavigationDelegate
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView {
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
     NSLog(@"%s", __PRETTY_FUNCTION__ );
-    NSString *script = [NSString stringWithFormat:@"window.jivo_api.setUserToken(%ld)", (long)self.userId];
-    [webView stringByEvaluatingJavaScriptFromString:script];
+    NSString *script = [NSString stringWithFormat:@"window.setUserToken(%ld)", (long)self.userId];
+    [webView evaluateJavaScript:script completionHandler:^(id result, NSError *error) {}];
+    NSString *script2 = [NSString stringWithFormat:@"window.setPayload(%@)", self.payload];
+    [webView evaluateJavaScript:script2 completionHandler:^(id result, NSError *error) {}];
+
+    [webView evaluateJavaScript:@"window.setData('ru', false)" completionHandler:^(id result, NSError *error) {}];
 }
 
 @end
@@ -47,16 +59,20 @@
 
 @implementation SRWebNavigationController
 
-@synthesize webViewController = _webViewController;
+@synthesize visibleViewController = _visibleViewController;
 
-- (instancetype)init
-{
-    self = [super init];
+- (instancetype)initWithRootViewController:(UIViewController *)rootViewController {
+    self = [super initWithRootViewController:rootViewController];
     if ( !self ) {
         return self;
     }
-    _webViewController = [SRWebViewController new];
+    self.navigationBar.barStyle = UIBarStyleDefault;
+    _visibleViewController = rootViewController;
     return self;
+}
+
++ (instancetype)defaultNavigationController {
+    return [[self alloc] initWithRootViewController:[SRWebViewController new]];
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
@@ -67,12 +83,14 @@
 }
 
 - (void)showWebViewController {
-    UIViewController *rootViewController = UIApplication.sharedApplication.keyWindow.rootViewController;
-    rootViewController.modalPresentationStyle = UIModalPresentationPageSheet;
-    [rootViewController presentViewController:({
-        SRWebNavigationController *navigationController = [[SRWebNavigationController alloc] initWithRootViewController:_webViewController];
-        navigationController;
-    }) animated:YES completion:nil];
+    if ( [[self viewIfLoaded] window] ) {
+        return;
+    }
+    [self dismissViewControllerAnimated:NO completion:^{
+        UIViewController *rootViewController = UIApplication.sharedApplication.keyWindow.rootViewController;
+        rootViewController.modalPresentationStyle = UIModalPresentationPageSheet;
+        [rootViewController presentViewController:self animated:YES completion:nil];
+    }];
 }
 
 @end

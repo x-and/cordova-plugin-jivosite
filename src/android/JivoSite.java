@@ -16,36 +16,43 @@ import org.json.JSONObject;
 
 public class JivoSite extends CordovaPlugin {
 
-    public void initialize(CordovaInterface cordova, CordovaWebView webView) {
-        super.initialize(cordova, webView);
-        ResourceHelper.INSTANCE.init(cordova.getActivity().getResources(), cordova.getActivity().getPackageName());
-    }
+	public void initialize(CordovaInterface cordova, CordovaWebView webView) {
+		super.initialize(cordova, webView);
+		ResourceHelper.INSTANCE.init(cordova.getActivity().getResources(), cordova.getActivity().getPackageName());
+	}
 
-    @Override
-    public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-        if (action.equals("open_chat")) {
-            this.openNewActivity(args.getString(0), args.getBoolean(1), args.getString(2));
-            return true;
-        }
-        return false;
-    }
+	public void onResume(boolean multitasking) {
+		ResourceHelper.INSTANCE.init(cordova.getActivity().getResources(), cordova.getActivity().getPackageName());
+	}
 
-    private void openNewActivity(String userToken, boolean backButton, String activityTitle) {
-        Intent intent = new Intent(this.webView.getContext(), JivoActivity.class);
-        Bundle b = new Bundle();
+	@Override
+	public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
+		if (action.equals("open_chat")) {
+			this.openNewActivity(args.getString(0), args.getBoolean(1), args.getString(2), args.getString(3));
+			return true;
+		}
+		return false;
+	}
 
-        if (userToken != null) {
-            b.putString("userToken", userToken);
-        }
-        if (activityTitle != null) {
-            b.putString("activityTitle", activityTitle);
-        }
-        if (backButton) {
-            b.putBoolean("backButton", backButton);
-        }
+	private void openNewActivity(String userToken, boolean backButton, String activityTitle, String payload) {
+		Intent intent = new Intent(this.webView.getContext(), JivoActivity.class);
+		Bundle b = new Bundle();
 
-        intent.putExtras(b);
-        this.cordova.getActivity().startActivity(intent);
-    }
+		if (userToken != null) {
+			b.putString("userToken", userToken);
+		}
+		if (payload != null) {
+			b.putString("payload", payload);
+		}
+		if (activityTitle != null) {
+			b.putString("activityTitle", activityTitle);
+		}
+		if (backButton) {
+			b.putBoolean("backButton", backButton);
+		}
+
+		intent.putExtras(b);
+		this.cordova.getActivity().startActivity(intent);
+	}
 
 }
